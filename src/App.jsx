@@ -492,7 +492,14 @@ const DIFF_LABELS = { easy: "Easy", medium: "Medium", hard: "Hard" };
 export default function App() {
   const [activePattern, setActivePattern] = useState(PATTERNS[0].id);
   const [activeDiff, setActiveDiff] = useState("easy");
-  const [checked, setChecked] = useState({});
+  const [checked, setChecked] = useState(() => {
+  try {
+    const saved = localStorage.getItem("lc-progress");
+    return saved ? JSON.parse(saved) : {};
+  } catch {
+    return {};
+  }
+});
 
   const pattern = PATTERNS.find((p) => p.id === activePattern);
   const problems = pattern.problems[activeDiff];
@@ -504,8 +511,12 @@ export default function App() {
   const solvedCount = Object.values(checked).filter(Boolean).length;
 
   const toggleCheck = (key) => {
-    setChecked((prev) => ({ ...prev, [key]: !prev[key] }));
-  };
+  setChecked((prev) => {
+    const updated = { ...prev, [key]: !prev[key] };
+    localStorage.setItem("lc-progress", JSON.stringify(updated));
+    return updated;
+  });
+};
 
   const patternProgress = (p) => {
     const all = [...p.problems.easy, ...p.problems.medium, ...p.problems.hard];
