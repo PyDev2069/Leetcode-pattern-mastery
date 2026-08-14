@@ -1,4 +1,7 @@
 import { useState } from "react";
+const globalStyle = document.createElement('style');
+globalStyle.innerHTML = `* { margin: 0; padding: 0; box-sizing: border-box; } body { background: #0f0f13; }`;
+document.head.appendChild(globalStyle);
 
 const PATTERNS = [
   {
